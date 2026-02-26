@@ -14,7 +14,6 @@ Swagger docs:
 """
 
 from fastapi import FastAPI, HTTPException, status
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from models import (
@@ -131,6 +130,9 @@ async def start_interview(req: StartInterviewRequest):
     # Speak question via TTS (Fahima's module)
     tts_speaker(first_question, session.language)
 
+    # Cache so submit_answer always has the pending question text
+    session._pending_question = first_question  # type: ignore
+
     return StartInterviewResponse(
         session_id      = session.session_id,
         first_question  = first_question,
@@ -187,21 +189,10 @@ async def submit_answer(req: SubmitAnswerRequest):
     # ── Track which question was just answered ─────────────────────
     answered_q_number = session.current_question_number
 
-    # ── Find the question text that was asked ──────────────────────
-    # (It was generated and spoken already; we need the text to store in QAPair)
-    if answered_q_number == 1:
-        question_text = ctrl.FIRST_QUESTION
-    else:
-        # Re-derive from the last recorded question in session
-        # (In production, you'd cache the pending question in session state)
-        question_text = (
-            session.qa_pairs[-1].question    # fallback: shouldn't happen
-            if session.qa_pairs
-            else ctrl.FIRST_QUESTION
-        )
-        # Better: store pending question on session (see note in PDF)
-        if hasattr(session, "_pending_question"):
-            question_text = session._pending_question  # type: ignore
+    # ── Retrieve the question text that was asked ──────────────────
+    # _pending_question is always set: at /start for Q1, and after each
+    # /answer for Q2-Q5. This is the single source of truth.
+    question_text = getattr(session, "_pending_question", ctrl.FIRST_QUESTION)
 
     # ── Record Q&A + advance counter ─────────────────────────────
     ctrl.record_answer(

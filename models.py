@@ -4,7 +4,7 @@ models.py
 All Pydantic request & response models for the Interview Flow Controller API.
 """
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
 from enum import Enum
 
@@ -48,33 +48,24 @@ class LanguageEnum(str, Enum):
 # ─────────────────────────────────────────────────────────────────
 
 class StartInterviewRequest(BaseModel):
-    domain:   DomainEnum   = Field(..., example="Deep Learning", # type: ignore
-                                   description="Technical domain for the interview")
-    language: LanguageEnum = Field(LanguageEnum.ENGLISH, example="en", # type: ignore
-                                   description="Language for the interview")
+    model_config = ConfigDict(json_schema_extra={
+        "example": {"domain": "Deep Learning", "language": "en"}
+    })
 
-    class Config:
-        schema_extra = {
-            "example": {
-                "domain":   "Deep Learning",
-                "language": "en"
-            }
-        }
+    domain:   DomainEnum   = Field(..., description="Technical domain for the interview")
+    language: LanguageEnum = Field(LanguageEnum.ENGLISH, description="Language for the interview")
 
 
 class SubmitAnswerRequest(BaseModel):
-    session_id: str = Field(..., example="abc123", # type: ignore
-                            description="Session ID returned from /start")
-    answer:     str = Field(..., min_length=1, example="I have 3 years of ML experience.", # type: ignore
-                            description="Candidate's answer to the current question")
-
-    class Config:
-        schema_extra = {
-            "example": {
-                "session_id": "abc123",
-                "answer":     "I have 3 years of experience in machine learning."
-            }
+    model_config = ConfigDict(json_schema_extra={
+        "example": {
+            "session_id": "abc123",
+            "answer":     "I have 3 years of experience in machine learning."
         }
+    })
+
+    session_id: str = Field(..., description="Session ID returned from /start")
+    answer:     str = Field(..., min_length=1, description="Candidate's answer to the current question")
 
 
 class AbortInterviewRequest(BaseModel):
