@@ -1,3 +1,10 @@
+"""
+controller.py
+-------------
+Pure domain logic for the Interview Flow Controller.
+No FastAPI imports here — keeps business logic cleanly separated.
+"""
+
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 from enum import Enum
@@ -23,14 +30,19 @@ class InterviewState(str, Enum):
 
 
 DIFFICULTY_MAP: Dict[int, Difficulty] = {
-    1: Difficulty.EASY,     # Fixed intro question
-    2: Difficulty.EASY,     # Warm-up
-    3: Difficulty.MEDIUM,   # Applied / conceptual
-    4: Difficulty.HARD,     # Deep technical
-    5: Difficulty.HARD,     # Advanced / edge-case
+    1:  Difficulty.EASY,    # Fixed intro question
+    2:  Difficulty.EASY,    # Warm-up
+    3:  Difficulty.EASY,    # Basic domain knowledge
+    4:  Difficulty.MEDIUM,  # Applied concept
+    5:  Difficulty.MEDIUM,  # Real-world usage
+    6:  Difficulty.MEDIUM,  # Project / experience
+    7:  Difficulty.HARD,    # Deep technical
+    8:  Difficulty.HARD,    # System design / trade-offs
+    9:  Difficulty.HARD,    # Advanced optimisation
+    10: Difficulty.HARD,    # Edge cases / architecture
 }
 
-TOTAL_QUESTIONS   = 5
+TOTAL_QUESTIONS   = 10
 FIRST_QUESTION    = "Please introduce yourself."
 
 

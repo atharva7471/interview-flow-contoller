@@ -250,7 +250,6 @@ async def submit_answer(req: SubmitAnswerRequest):
 
 
 # ── 3. GET PROGRESS ───────────────────────────────────────────────
-
 @app.get(
     "/interview/progress/{session_id}",
     response_model = ProgressResponse,
@@ -353,7 +352,6 @@ async def abort_interview(req: AbortInterviewRequest):
 
 
 # ── 6. LIST ALL SESSIONS  (debug / admin) ─────────────────────────
-
 @app.get(
     "/interview/sessions",
     tags    = ["Debug"],
