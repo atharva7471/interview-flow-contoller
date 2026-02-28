@@ -2,7 +2,7 @@
 
 > **Intern:** Atharva Dilip Bhosale <br />
 > **Module:** Interview Flow Controller <br />
-> **Project:** Domain-Based Intelligent Voice AI Interviewer <br />
+> **Project:** Domain-Based Intelligent Voice AI Interviewer  <br />
 
 ---
 
